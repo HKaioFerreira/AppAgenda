@@ -8,7 +8,7 @@ var app= {
     
         onDeviceReady: function(){
             document.getElementById("btnBuscar").addEventListener("click",app.buscar);
-            document.getElementById("btnEditar").addEventListener("click",app.editar);
+            document.getElementById("btnExcluir").addEventListener("click",app.excluir);
             
             this.receivedEvent('deviceready');
         },
@@ -52,20 +52,14 @@ var app= {
             });
         },
 
-        editar: function(){
+        excluir: function(){
             var url_string = window.location.href;
             var url = new URL(url_string);
             var getTelefone= url.searchParams.get("telefone");
             alert(getTelefone);
 
-            let nome = document.getElementById("nometxt").value;
-            let telefone = document.getElementById("teltxt").value;
-            let origem = document.getElementById("origemtxt").value;
-            let data_contato = document.getElementById("contxt").value;
-            let observacao = document.getElementById("obstxt").value;
-
             db.transaction(function(tx){
-                tx.executeSql('UPDATE clientes SET nome=?, telefone=?,origem=?,data_contato=?,observacao=? WHERE telefone=?',[nome,telefone,origem,data_contato,observacao,getTelefone]);
+                tx.executeSql('DELETE clientes WHERE telefone=?',[getTelefone]);
             },function(error){
                 alert('Erro durante a transacao com banco: '+ error.menssage);
             },function(){

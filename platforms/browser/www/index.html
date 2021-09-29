@@ -29,7 +29,7 @@
             * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
                 * Enable inline JS: add 'unsafe-inline' to default-src
         -->
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+       <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">-->
         <meta name="format-detection" content="telephone=no">
         <meta name="msapplication-tap-highlight" content="no">
         <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
@@ -38,23 +38,29 @@
         <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
         <script src="cordova.js"></script>
         <script src="js/Jquery.js"></script>
-        <script src="js/index2.js"></script>
+        <script src="bootstrap/js/bootstrap.js"></script>
+
+        <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-firestore.js"></script>
+
+        <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-analytics.js"></script>
+
+		<script src="js/firebase.js"></script>
+		<script src="js/index.js"></script>
         <title>Hello World</title>
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark"> 
-            <div class="collapse navbar-collapse" id="navbarNav">
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark"> 
+                <a class="navbar-brand" href="#">Home</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="consultar.html">Consultar</a>
                     </li>
-                    <li>
-                        <a class="nav-link" href="editar.html">Editar</a>
-                    </li class="nav-item">
                 </ul>
-            </div>
-        </nav>
-            <div class="card-body">
+            
+        </nav>   
+        <div class="card-body">
         <h5>Consultar - Contatos Agendados</h5>
         <p>Sistema utilizado para agendamento de serviços</p>
             <div class="form-group">
@@ -76,7 +82,7 @@
                 <input type="date" id="contxt" class="form-control" placeholder="dd/mm/aa">
                 <span>Observação</span>
                 <textarea id="obstxt" rows="3" class="form-control"></textarea></br> 
-            <button type="submit"  id="btnCadastrar" class="btn btn-outline-dark">Cadastrar</button>
+            <button type="button"  id="btnInserir" class="btn btn-outline-dark">Cadastrar</button>
             </form>
         </div>
     </div>

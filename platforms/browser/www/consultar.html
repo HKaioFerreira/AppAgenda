@@ -29,7 +29,7 @@
             * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
                 * Enable inline JS: add 'unsafe-inline' to default-src
         -->
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+       <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">-->
         <meta name="format-detection" content="telephone=no">
         <meta name="msapplication-tap-highlight" content="no">
         <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
@@ -38,27 +38,31 @@
         <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
         <script src="cordova.js"></script>
         <script src="js/Jquery.js"></script>
-        <script src="js/consultar.js"></script>
+        <script src="bootstrap/js/bootstrap.js"></script>
+        
+
+        <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-firestore.js"></script>
+
+        <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-analytics.js"></script>
+
+		<script src="js/firebase.js"></script>
+		<script src="js/consultar.js"></script>
         <title>Hello World</title>
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark"> 
-            <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="index.html">Cadastrar</a>
                     </li>
-                    <li>
-                        <a class="nav-link" href="editar.html">Editar</a>
-                    </li class="nav-item">
                 </ul>
-            </div>
         </nav>
             <div class="row">
                 <div class="mb-3 col-12">
                     <div class="card-body">
                 <h5>Consultar - Contatos Agendados</h5>
-                <table class="table table-dark">
+                <table class="table table-responsive" style="width:auto; background-color: rgb(24, 24, 24); color:rgb(194, 196, 206)">
                     <thead>
                         <tr>
                             <th socpe="col">Nome</th>
@@ -69,9 +73,9 @@
                             <th socpe="col">Ação</th> 
                         </tr>
                     </thead>
-                    <thead id="tableData">
+                    <tbody id="TableData">
 
-                    </thead>
+                    </tbody>
                 </table>
                 <button type="button" id="btnListar"  class="btn btn-outline-dark">Buscar Agendamento</button>
             </div>
