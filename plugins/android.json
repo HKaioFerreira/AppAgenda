@@ -12,6 +12,12 @@
     },
     "cordova-sqlite-storage": {
       "PACKAGE_NAME": "com.etec.forms"
+    },
+    "cordova-plugin-file": {
+      "PACKAGE_NAME": "com.etec.forms"
+    },
+    "cordova-plugin-dialogs": {
+      "PACKAGE_NAME": "com.etec.forms"
     }
   },
   "dependent_plugins": {}

@@ -1,29 +1,38 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
+var app = {
+        
+    // Application Constructor
+    initialize: function() {
+        document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+    },
 
-// Wait for the deviceready event before using any of Cordova's device APIs.
-// See https://cordova.apache.org/docs/en/latest/cordova/events/events.html#deviceready
-document.addEventListener('deviceready', onDeviceReady, false);
+    onDeviceReady: function() {
+        document.getElementById("btnInserir").addEventListener("click",app.inserir);  
+    },
 
-function onDeviceReady() {
-    // Cordova is now initialized. Have fun!
+    inserir: function(){
+        var db = firebase.firestore();
 
-    console.log('Running cordova-' + cordova.platformId + '@' + cordova.version);
-    document.getElementById('deviceready').classList.add('ready');
-}
+        let cnome = document.getElementById("nometxt").value;
+        let ctelefone = document.getElementById("teltxt").value;
+        let corigem = document.getElementById("origemtxt").value;
+        let cdata_contato = document.getElementById("contxt").value;
+        let cobservacao = document.getElementById("obstxt").value;
+
+        db.collection("cadastro").add({
+            Nome: cnome,
+            Telefone: ctelefone,
+            Origem: corigem,
+            Data: cdata_contato,
+            Obs: cobservacao
+        })
+        .then((docRef) => {
+            console.log("Document written with ID: ", docRef.id);
+        })
+        .catch((error) => {
+            console.error("Error adding document: ", error);
+        });
+
+    }  
+};
+
+app.initialize();

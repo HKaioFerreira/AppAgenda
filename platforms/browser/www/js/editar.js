@@ -1,76 +1,81 @@
-var app= {
+var app = {
 
-    //construtor
-    
-        initialize: function(){
-            document.addEventListener('deviceready', this.onDeviceReady.bind(this),false);
-        },
-    
-        onDeviceReady: function(){
-            document.getElementById("btnBuscar").addEventListener("click",app.buscar);
-            document.getElementById("btnEditar").addEventListener("click",app.editar);
-            
-            this.receivedEvent('deviceready');
-        },
-    
-        receivedEvent: function(id){
-            db = window.sqlitePlugin.openDatabase({
-                name: 'aplicativo.db', location:'default', androidDatabaseProvider:'system'
+    // Application Constructor
+    initialize: function() {
+        document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+    },
+
+    onDeviceReady: function() {
+        document.getElementById("btnBuscar").addEventListener("click",app.buscar);
+        document.getElementById("btnEditar").addEventListener("click",app.editar);
+    },
+
+    buscar: function(){
+        var url_string = window.location.href;
+        var url= new URL(url_string);
+        var getTelefone = url.searchParams.get("telefone");
+
+        var db = firebase.firestore();
+        var ag = db.collection("cadastro").where("Telefone", "==", getTelefone);
+
+        ag.get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                console.log(doc.id, " => ", doc.data());
+                document.getElementById("nometxt").value = doc.data().Nome;
+                document.getElementById("teltxt").value = doc.data().Telefone;
+                document.getElementById("origemtxt").value = doc.data().Origem;
+                document.getElementById("contxt").value = doc.data().Data;
+                document.getElementById("obstxt").value = doc.data().Obs;
             });
-            db.transaction(function(tx){
-                tx.executeSql('CREATE TABLE IF NOT EXISTS clientes(nome,telefone,origem,data_contato,observacao)');
-            }, function(error){
-                console.log('Transaction ERROR:'+ error.message);
-            },function(){
-                alert('Banco e Tabela clientes criados com sucesso!');
+        })
+        .catch((error) => {
+            console.log("Error getting documents: ", error);
+        });
+    },
+
+    editar: function(){
+        var url_string = window.location.href;
+        var url= new URL(url_string);
+        var getTelefone = url.searchParams.get("telefone");
+
+        let cnome = document.getElementById("nometxt").value;
+        let ctelefone = document.getElementById("teltxt").value;
+        let corigem = document.getElementById("origemtxt").value;
+        let cdata_contato = document.getElementById("contxt").value;
+        let cobservacao = document.getElementById("obstxt").value;
+
+        var db = firebase.firestore();
+        var ag = db.collection("cadastro").where("Telefone", "==", getTelefone);
+
+        ag.get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                var dados = db.collection("cadastro").doc(doc.id);
+
+                return dados.update({
+                    Nome: cnome,
+                    Telefone: ctelefone,
+                    Origem: corigem,
+                    Data: cdata_contato,
+                    Obs: cobservacao
+                })
+                .then(() => {
+                    console.log("Document successfully updated!");
+                    window.location.href = cordova.file.applicationDirectory + "www/consultar.html";
+                })
+                .catch((error) => {
+                    // The document probably doesn't exist.
+                    console.error("Error updating document: ", error);
+                });
             });
-    
-        },
-    
-        buscar: function(){
-            var url_string = window.location.href;
-            var url = new URL(url_string);
-            var getTelefone= url.searchParams.get("telefone");
-            alert(getTelefone);
-            db.executeSql('SELECT nome AS uNome,telefone AS uTelefone,origem AS uOrigem,data_contato AS uData_contato,observacao AS uObservacao FROM clientes WHERE telefone=?',[getTelefone], function(rs) {
-                alert(JSON.stringify(rs));
-                alert(rs.rows.length);
-                let i=0;
-                for(i=0;i<rs.rows.lenght;i++){
-                    alert("item"+i);
-                    let recordItem = rs.rows.item(i);
-                    alert(JSON.stringify(recordItem));
-                    document.getElementById("nometxt").value = rs.rows.item(i).uNome;
-                    document.getElementById("teltxt").value= rs.rows.item(i).uTelefone;
-                    document.getElementById("origemtxt").value= rs.rows.item(i).uOrigem;
-                    document.getElementById("contxt").value= rs.rows.item(i).uData_contato;
-                    document.getElementById("obstxt").value= rs.rows.item(i).uObservacao;
-                }
+        })
+        .catch((error) => {
+            console.log("Error getting documents: ", error);
+        });
 
-            }, function(error){
-                alert('Erro no SELECT: '+ error.message);
-            });
-        },
+    }
 
-        editar: function(){
-            var url_string = window.location.href;
-            var url = new URL(url_string);
-            var getTelefone= url.searchParams.get("telefone");
-            alert(getTelefone);
+};
 
-            let nome = document.getElementById("nometxt").value;
-            let telefone = document.getElementById("teltxt").value;
-            let origem = document.getElementById("origemtxt").value;
-            let data_contato = document.getElementById("contxt").value;
-            let observacao = document.getElementById("obstxt").value;
-
-            db.transaction(function(tx){
-                tx.executeSql('UPDATE clientes SET nome=?, telefone=?,origem=?,data_contato=?,observacao=? WHERE telefone=?',[nome,telefone,origem,data_contato,observacao,getTelefone]);
-            },function(error){
-                alert('Erro durante a transacao com banco: '+ error.menssage);
-            },function(){
-                alert('Atualização realizada com sucesso!!')
-            });
-        },
-    };
-    app.initialize();
+app.initialize();
