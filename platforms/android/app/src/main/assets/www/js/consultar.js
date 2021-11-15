@@ -15,7 +15,7 @@ var app = {
 
         ag.get()
         .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
+            querySnapshot.forEach((doc) => { 
                 console.log(doc.id, " => ", doc.data());
                 $("#TableData").append("<tr>");
                 $("#TableData").append("<td scope='col'>" + doc.data().Nome + "</td>");
@@ -23,7 +23,7 @@ var app = {
                 $("#TableData").append("<td scope='col'>" + doc.data().Origem + "</td>");
                 $("#TableData").append("<td scope='col'>" + doc.data().Data + "</td>");
                 $("#TableData").append("<td scope='col'>" + doc.data().Obs + "</td>");
-                $("#TableData").append("<td scope='col'><a href='" + cordova.file.applicationDirectory + "www/editar.html?Telefone=" + doc.data().Telefone + "'>Editar</a>&nbsp;|&nbsp;<a href='" + cordova.file.applicationDirectory + "www/excluir.html?Telefone=" + doc.data().Telefone + "'>Excluir</a></td>");
+                $("#TableData").append("<td scope='col'><a href='" + cordova.file.applicationDirectory + "www/editar.html?telefone=" + doc.data().Telefone + "'>Editar</a>&nbsp;|&nbsp;<a href='" + cordova.file.applicationDirectory + "www/excluir.html?telefone=" + doc.data().Telefone + "'>Excluir</a></td>");
                 $("#TableData").append("</tr>");
             });
         })

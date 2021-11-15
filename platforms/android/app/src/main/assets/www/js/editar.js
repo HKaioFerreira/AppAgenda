@@ -12,11 +12,11 @@ var app = {
 
     buscar: function(){
         var url_string = window.location.href;
-        var url = new URL(url_string);
+        var url= new URL(url_string);
         var getTelefone = url.searchParams.get("telefone");
 
         var db = firebase.firestore();
-        var ag = db.collection("cadastro").where("telefone", "==", getTelefone);
+        var ag = db.collection("cadastro").where("Telefone", "==", getTelefone);
 
         ag.get()
         .then((querySnapshot) => {
@@ -36,7 +36,7 @@ var app = {
 
     editar: function(){
         var url_string = window.location.href;
-        var url = new URL(url_string);
+        var url= new URL(url_string);
         var getTelefone = url.searchParams.get("telefone");
 
         let cnome = document.getElementById("nometxt").value;
@@ -46,7 +46,7 @@ var app = {
         let cobservacao = document.getElementById("obstxt").value;
 
         var db = firebase.firestore();
-        var ag = db.collection("cadastro").where("telefone", "==", getTelefone);
+        var ag = db.collection("cadastro").where("Telefone", "==", getTelefone);
 
         ag.get()
         .then((querySnapshot) => {

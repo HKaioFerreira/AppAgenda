@@ -10,45 +10,29 @@ var app= {
             document.getElementById("btnBuscar").addEventListener("click",app.buscar);
             document.getElementById("btnExcluir").addEventListener("click",app.excluir);
             
-            this.receivedEvent('deviceready');
+            
         },
-    
-        receivedEvent: function(id){
-            db = window.sqlitePlugin.openDatabase({
-                name: 'aplicativo.db', location:'default', androidDatabaseProvider:'system'
-            });
-            db.transaction(function(tx){
-                tx.executeSql('CREATE TABLE IF NOT EXISTS clientes(nome,telefone,origem,data_contato,observacao)');
-            }, function(error){
-                console.log('Transaction ERROR:'+ error.message);
-            },function(){
-                alert('Banco e Tabela clientes criados com sucesso!');
-            });
-    
-        },
-    
         buscar: function(){
             var url_string = window.location.href;
-            var url = new URL(url_string);
-            var getTelefone= url.searchParams.get("telefone");
-            alert(getTelefone);
-            db.executeSql('SELECT nome AS uNome,telefone AS uTelefone,origem AS uOrigem,data_contato AS uData_contato,observacao AS uObservacao FROM clientes WHERE telefone=?',[getTelefone], function(rs) {
-                alert(JSON.stringify(rs));
-                alert(rs.rows.length);
-                let i=0;
-                for(i=0;i<rs.rows.lenght;i++){
-                    alert("item"+i);
-                    let recordItem = rs.rows.item(i);
-                    alert(JSON.stringify(recordItem));
-                    document.getElementById("nometxt").value = rs.rows.item(i).uNome;
-                    document.getElementById("teltxt").value= rs.rows.item(i).uTelefone;
-                    document.getElementById("origemtxt").value= rs.rows.item(i).uOrigem;
-                    document.getElementById("contxt").value= rs.rows.item(i).uData_contato;
-                    document.getElementById("obstxt").value= rs.rows.item(i).uObservacao;
-                }
-
-            }, function(error){
-                alert('Erro no SELECT: '+ error.message);
+            var url= new URL(url_string);
+            var getTelefone = url.searchParams.get("telefone");
+    
+            var db = firebase.firestore();
+            var ag = db.collection("cadastro").where("Telefone", "==", getTelefone);
+    
+            ag.get()
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    console.log(doc.id, " => ", doc.data());
+                    document.getElementById("nometxt").value = doc.data().Nome;
+                    document.getElementById("teltxt").value = doc.data().Telefone;
+                    document.getElementById("origemtxt").value = doc.data().Origem;
+                    document.getElementById("contxt").value = doc.data().Data;
+                    document.getElementById("obstxt").value = doc.data().Obs;
+                });
+            })
+            .catch((error) => {
+                console.log("Error getting documents: ", error);
             });
         },
 
@@ -56,15 +40,28 @@ var app= {
             var url_string = window.location.href;
             var url = new URL(url_string);
             var getTelefone= url.searchParams.get("telefone");
-            alert(getTelefone);
+            var db=firebase.firestore();
+            var ag=db.collection("cadsatro").where("telefone","==", getTelefone);
 
-            db.transaction(function(tx){
-                tx.executeSql('DELETE clientes WHERE telefone=?',[getTelefone]);
-            },function(error){
-                alert('Erro durante a transacao com banco: '+ error.menssage);
-            },function(){
-                alert('Atualização realizada com sucesso!!')
-            });
-        },
+            navigator.notification.confirm(
+                'Deseja excluir esse registro?',
+                onConfirm,
+                'Excluir',
+                ['Sim','Não']
+            );
+                    function onConfirm(buttonIndex){
+
+                        if(buttonIndex==1){
+                            ag.get().then((querySnapshot)=>{querySnapshot.forEach((doc)=>{
+                                db.collection("cadastro").doc(doc.id).delete().then(()=>{ console.log("documento deletado com sucesso" ); window.location.href=cordova.file.applicationDirectory + "www/editar.html";}).catch((error)=>{console.error("Erro ao remover Documento: ",error);});
+                            });
+                        })
+                        .catch((error)=>{
+                            console.log("Erro ao buscar documentos: ",error);
+                        });
+                    }
+                }
+            
+        }
     };
     app.initialize();
